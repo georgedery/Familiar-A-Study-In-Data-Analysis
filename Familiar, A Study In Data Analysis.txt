@@ -1,0 +1,42 @@
+# Import libraries
+import pandas as pd
+import numpy as np
+from scipy.stats import ttest_1samp, ttest_ind, chi2_contingency
+# Load datasets
+lifespans = pd.read_csv('familiar_lifespan.csv')
+iron = pd.read_csv('familiar_iron.csv')
+
+# first five rows of lifespans
+print(lifespans.head())
+
+# Vein pack lifespans
+vein_pack_lifespans = lifespans.lifespan[lifespans.pack == 'vein']
+print('Average Lifespan for Vein Pack subscribers:')
+print(np.mean(vein_pack_lifespans))
+
+# run one sample test
+tstat, pval = ttest_1samp(vein_pack_lifespans, 73)
+print('p-value for one sample test: ')
+print(pval)
+
+# Artery pack lifespans
+artery_pack_lifespans = lifespans.lifespan[lifespans.pack == 'artery']
+print('Average Lifespan for Artery Pack subscribers:')
+print(np.mean(artery_pack_lifespans))
+
+# run two sample test
+tstat, pval = ttest_ind(vein_pack_lifespans, artery_pack_lifespans)
+print('p-value for two sample test: ')
+print(pval)
+
+# first five rows of iron
+print(iron.head())
+
+# contingency table
+Xtab = pd.crosstab(iron.pack, iron.iron)
+print('Contingency table for pack and iron: ')
+print(Xtab)
+
+chi2, pval, dof, expected = chi2_contingency(Xtab)
+print('p-value for chi-square test: ')
+print(pval)
